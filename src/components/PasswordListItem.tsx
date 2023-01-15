@@ -9,6 +9,7 @@ interface PasswordListItemProps {
     disabled: boolean;
     onClick: () => void;
     vulnerable: boolean;
+    selected: boolean;
 }
 
 function PasswordListItem({ name, vulnerable, ...rest }: PasswordListItemProps) {

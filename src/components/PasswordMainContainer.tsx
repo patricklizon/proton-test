@@ -47,7 +47,7 @@ const PasswordMain = ({
     }
 
     async function handleSelectPassword(id: string) {
-        setSelectedPasswordId(id);
+        setSelectedPasswordId(selectedPasswordId === id ? null : id);
     }
 
     function handleDelete(id: string) {
@@ -88,6 +88,7 @@ const PasswordMain = ({
             <div className={classes.passwordsArea}>
                 {Object.values(decryptedPasswords).length > 0 ? (
                     <Passwords
+                        selectedPasswordId={selectedPasswordId}
                         passwords={decryptedPasswords}
                         editing={editing}
                         onSelectPassword={handleSelectPassword}
