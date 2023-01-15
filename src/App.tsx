@@ -69,7 +69,7 @@ function App() {
         }
 
         sync();
-    }, []);
+    }, [decryptedPasswords]);
 
     function handleLogout() {
         storage.removeItem(CRYPTO_KEY_STORAGE_KEY);
