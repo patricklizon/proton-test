@@ -42,7 +42,7 @@ type PasswordEditProps = {
 };
 
 function PasswordEdit({ password, onSave, onDelete, onCancel }: PasswordEditProps): JSX.Element {
-    const [values, setValues] = useState(password);
+    const [values, setValues] = useState<Password>(password);
 
     const [urlInput, setUrlInput] = useState('');
     const isUrlInputEmpty = !urlInput.length;
@@ -73,14 +73,16 @@ function PasswordEdit({ password, onSave, onDelete, onCancel }: PasswordEditProp
         onCancel();
     }
 
-    function handleUrlAdd() {
-        const urls = [...(values.url ?? [])];
+    function handleUrlAdd(urls: readonly string[]): MouseEventHandler {
+        return () => {
+            const url = [...urls];
 
-        urls.unshift(urlInput.trim());
+            url.unshift(urlInput.trim());
 
-        change({ url: urls });
+            change({ url });
 
-        setUrlInput('');
+            setUrlInput('');
+        };
     }
 
     const handleUrlDelete =
@@ -109,18 +111,18 @@ function PasswordEdit({ password, onSave, onDelete, onCancel }: PasswordEditProp
                     autoFocus
                     className={classes.titleInput}
                     name="name"
-                    value={values.name ?? ''}
+                    value={values.name}
                     onChange={handleChange}
                 />
             </h2>
 
-            <div className={classes.content ?? ''}>
+            <div className={classes.content}>
                 <Labelled label="description">
-                    <TextArea name="description" value={values.description ?? ''} onChange={handleChange} />
+                    <TextArea name="description" value={values.description} onChange={handleChange} />
                 </Labelled>
 
                 <Labelled label="value">
-                    <Input name="value" value={values.value ?? ''} onChange={handleChange} />
+                    <Input name="value" value={values.value} onChange={handleChange} />
                 </Labelled>
 
                 <Labelled label="url">
@@ -131,7 +133,7 @@ function PasswordEdit({ password, onSave, onDelete, onCancel }: PasswordEditProp
                             style={{ marginRight: 4 }}
                         />
 
-                        <Button onClick={handleUrlAdd} disabled={isUrlInputEmpty}>
+                        <Button onClick={handleUrlAdd(values.url)} disabled={isUrlInputEmpty}>
                             Add
                         </Button>
                     </div>

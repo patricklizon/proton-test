@@ -11,13 +11,16 @@ import PasswordEdit from './PasswordEdit';
 import { Password } from '../models';
 import classes from './PasswordMainContainer.module.css';
 
-function createNewPassword() {
+function createNewPassword(): Password {
     const id = uniqid();
 
     return {
         id,
         value: '',
-    } as Password;
+        url: [],
+        createdAt: Date.now(),
+        name: '',
+    };
 }
 
 interface Props {
@@ -51,9 +54,11 @@ const PasswordMain = ({
     }
 
     function handleDelete(id: string) {
-        onPasswordDeleted(id);
-        setEditing(false);
-        setSelectedPasswordId(null);
+        return (): void => {
+            onPasswordDeleted(id);
+            setEditing(false);
+            setSelectedPasswordId(null);
+        };
     }
 
     function handleCancel() {
@@ -105,7 +110,7 @@ const PasswordMain = ({
                             password={decryptedPasswords[selectedPasswordId]}
                             onSave={handleSave}
                             onCancel={handleCancel}
-                            onDelete={() => handleDelete(selectedPasswordId)}
+                            onDelete={handleDelete(selectedPasswordId)}
                         />
                     ) : (
                         <PasswordView
