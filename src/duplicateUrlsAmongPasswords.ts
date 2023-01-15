@@ -1,13 +1,20 @@
 import { Password } from './models';
 
-export function duplicateUrlsAmongPasswords(passwords: { [id: string]: Password }) {
-    const set = new Set<string>();
-    const urls = Object.values(passwords).flatMap((p) => p.url);
+export function duplicateUrlsAmongPasswords(passwordRecord: { [id: string]: Password }): {
+    [url: string]: string[];
+} {
+    const result: { [url: string]: string[] } = {};
+    const passwords = Object.values(passwordRecord);
 
-    for (const u of urls) {
-        if (set.has(u)) return true;
-        set.add(u);
+    for (const p of passwords) {
+        for (const u of p.url) {
+            (result[u] ??= []).push(p.id);
+        }
     }
 
-    return false;
+    for (const [u, pIds] of Object.entries(result)) {
+        if (pIds.length < 2) delete result[u];
+    }
+
+    return result;
 }

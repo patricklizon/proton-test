@@ -91,11 +91,20 @@ function App() {
 
         const duplicateUrls = duplicateUrlsAmongPasswords(decryptedPasswords);
 
+        /*
+         * if there are duplicate urls among the passwords alert a message such as
+         * 'Duplicate url "https://foobar.com" found for passwords "foo", "bar", "baz"'
+         */
         if (duplicateUrls) {
-            /*
-             * if there are duplicate urls among the passwords alert a message such as
-             * 'Duplicate url "https://foobar.com" found for passwords "foo", "bar", "baz"'
-             */
+            for (const u of password.url) {
+                if (u in duplicateUrls) {
+                    alert(
+                        `Duplicate url "${u}" found for passwords ${duplicateUrls[u]
+                            .map((pId) => nextPasswords[pId].name)
+                            .join(', ')}`
+                    );
+                }
+            }
         }
 
         setDecryptedPasswords(nextPasswords);
