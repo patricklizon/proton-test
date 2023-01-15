@@ -7,10 +7,7 @@ import { wait } from './helpers';
 import { CRYPTO_KEY_STORAGE_KEY, PASSWORDS_STORAGE_KEY } from './constants';
 import PasswordLockedContainer from './components/PasswordLockedContainer';
 import PasswordMainContainer from './components/PasswordMainContainer';
-
-function duplicateUrlsAmongPasswords(passwords: { [id: string]: Password }) {
-    return null;
-}
+import { duplicateUrlsAmongPasswords } from './duplicateUrlsAmongPasswords';
 
 function App() {
     const [loading, setLoading] = useState(true);
