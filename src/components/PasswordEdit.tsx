@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import { ChangeEvent, ChangeEventHandler, memo, MouseEventHandler, useState } from 'react';
 
 import Icon from '../atoms/Icon';
 import LabelledIconButton from './LabelledIconButton';
@@ -10,13 +10,20 @@ import List from '../atoms/List';
 import ListItem from '../atoms/ListItem';
 import clsx from 'clsx';
 import TextArea from '../atoms/TextArea';
+import { Password } from '../models';
 
-const UrlList = React.memo(({ urls, onDelete }) => (
+type UrlListProps = {
+    urls: string[];
+    onDelete: (idx: number) => MouseEventHandler;
+    onEdit: (idx: number) => ChangeEventHandler;
+};
+
+const UrlList = memo(({ urls, onDelete, onEdit }: UrlListProps) => (
     <List className={classes.urlList}>
         {urls?.map((urlEntry, index) => (
-            <ListItem dense className={classes.urlListItem}>
-                <input autoFocus value={urlEntry} />
-                <Icon onClick={() => onDelete(index)} size="small" className="fas fa-times" />
+            <ListItem dense className={classes.urlListItem} key={urlEntry}>
+                <input autoFocus value={urlEntry} onChange={onEdit(index)} />
+                <Icon onClick={onDelete(index)} size="small" className="fas fa-times" />
             </ListItem>
         ))}
         {urls?.length === 0 && (
@@ -27,19 +34,27 @@ const UrlList = React.memo(({ urls, onDelete }) => (
     </List>
 ));
 
-function PasswordEdit({ password, onSave, onDelete, onCancel }) {
+type PasswordEditProps = {
+    password: Password;
+    onSave: (p: Password) => void;
+    onDelete: () => void;
+    onCancel: () => void;
+};
+
+function PasswordEdit({ password, onSave, onDelete, onCancel }: PasswordEditProps): JSX.Element {
     const [values, setValues] = useState(password);
 
     const [urlInput, setUrlInput] = useState('');
+    const isUrlInputEmpty = !urlInput.length;
 
-    function change(partial) {
+    function change(partial: Record<string, any>) {
         setValues((values) => ({
             ...values,
             ...partial,
         }));
     }
 
-    function handleChange(e) {
+    function handleChange(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
         change({ [e.target.name]: e.target.value });
     }
 
@@ -59,25 +74,33 @@ function PasswordEdit({ password, onSave, onDelete, onCancel }) {
     }
 
     function handleUrlAdd() {
-        const urls = values.url || [];
+        const urls = [...(values.url ?? [])];
 
-        urls.unshift(urlInput);
+        urls.unshift(urlInput.trim());
 
         change({ url: urls });
 
         setUrlInput('');
     }
 
-    const handleUrlDelete = useCallback(
-        (index) => () => {
-            const urls = values.url || [];
+    const handleUrlDelete =
+        (urls: readonly string[]) =>
+        (index: number): MouseEventHandler =>
+        (_) => {
+            const url = [...urls];
 
-            urls.splice(index, 1);
+            url.splice(index, 1);
 
-            change({ url: urls });
-        },
-        []
-    );
+            change({ url });
+        };
+
+    const handleUrlEdit = (urls: readonly string[]) => (index: number) => (e: ChangeEvent<HTMLInputElement>) => {
+        const url = [...urls];
+
+        url[index] = e.target.value;
+
+        change({ url });
+    };
 
     return (
         <div className={classes.container}>
@@ -86,17 +109,18 @@ function PasswordEdit({ password, onSave, onDelete, onCancel }) {
                     autoFocus
                     className={classes.titleInput}
                     name="name"
-                    value={values.name}
+                    value={values.name ?? ''}
                     onChange={handleChange}
                 />
             </h2>
-            <div className={classes.content}>
+
+            <div className={classes.content ?? ''}>
                 <Labelled label="description">
-                    <TextArea name="description" value={values.description} onChange={handleChange} />
+                    <TextArea name="description" value={values.description ?? ''} onChange={handleChange} />
                 </Labelled>
 
                 <Labelled label="value">
-                    <Input name="value" value={values.value} onChange={handleChange} />
+                    <Input name="value" value={values.value ?? ''} onChange={handleChange} />
                 </Labelled>
 
                 <Labelled label="url">
@@ -107,10 +131,16 @@ function PasswordEdit({ password, onSave, onDelete, onCancel }) {
                             style={{ marginRight: 4 }}
                         />
 
-                        <Button onClick={handleUrlAdd}>Add</Button>
+                        <Button onClick={handleUrlAdd} disabled={isUrlInputEmpty}>
+                            Add
+                        </Button>
                     </div>
 
-                    <UrlList urls={values.url} onDelete={handleUrlDelete} />
+                    <UrlList
+                        urls={values.url}
+                        onEdit={handleUrlEdit(values.url)}
+                        onDelete={handleUrlDelete(values.url)}
+                    />
                 </Labelled>
             </div>
             <div className={classes.controls}>
