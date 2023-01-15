@@ -101,7 +101,6 @@ const PasswordMain = ({
                 {selectedPasswordId !== null ? (
                     editing ? (
                         <PasswordEdit
-                            key={selectedPasswordId}
                             password={decryptedPasswords[selectedPasswordId]}
                             onSave={handleSave}
                             onCancel={handleCancel}
@@ -109,7 +108,6 @@ const PasswordMain = ({
                         />
                     ) : (
                         <PasswordView
-                            key={selectedPasswordId}
                             password={decryptedPasswords[selectedPasswordId]}
                             onEdit={handlePasswordEditIntent}
                         />
