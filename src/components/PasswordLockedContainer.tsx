@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import { CRYPTO_KEY_STORAGE_KEY, encryptedValidation } from '../constants';
 import { wait } from '../helpers';

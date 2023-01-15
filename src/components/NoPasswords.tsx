@@ -1,5 +1,3 @@
-import React from 'react';
-
 import classes from './NoPasswords.module.css';
 import Icon from '../atoms/Icon';
 

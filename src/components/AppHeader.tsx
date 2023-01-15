@@ -1,5 +1,3 @@
-import React from 'react';
-
 import Button from '../atoms/Button';
 import Header from '../atoms/Header';
 import Icon from '../atoms/Icon';

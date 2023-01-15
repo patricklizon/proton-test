@@ -1,4 +1,4 @@
-import React from 'react';
+import { memo } from 'react';
 import Icon from '../atoms/Icon';
 
 import ListItem from '../atoms/ListItem';
@@ -21,4 +21,4 @@ function PasswordListItem({ name, vulnerable, ...rest }: PasswordListItemProps) 
     );
 }
 
-export default React.memo(PasswordListItem);
+export default memo(PasswordListItem);

@@ -1,5 +1,3 @@
-import React from 'react';
-
 import classes from './LabelledIconButton.module.css';
 import Button, { ButtonProps } from '../atoms/Button';
 import clsx from 'clsx';

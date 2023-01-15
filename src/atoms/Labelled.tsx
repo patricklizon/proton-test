@@ -1,5 +1,3 @@
-import React from 'react';
-
 import classes from './Label.module.css';
 
 interface LabelledProps extends React.ComponentPropsWithoutRef<'div'> {
