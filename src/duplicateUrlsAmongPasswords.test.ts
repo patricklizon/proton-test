@@ -30,7 +30,7 @@ const cases: Cases = [
                 },
             },
         ],
-        {},
+        null,
     ],
     [
         [

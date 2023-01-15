@@ -1,6 +1,6 @@
 import { Password } from './models';
 
-export function duplicateUrlsAmongPasswords(passwordRecord: { [id: string]: Password }): {
+export function duplicateUrlsAmongPasswords(passwordRecord: { [id: string]: Password }): null | {
     [url: string]: string[];
 } {
     const result: { [url: string]: string[] } = {};
@@ -16,5 +16,5 @@ export function duplicateUrlsAmongPasswords(passwordRecord: { [id: string]: Pass
         if (pIds.length < 2) delete result[u];
     }
 
-    return result;
+    return Object.entries(result).length > 0 ? result : null;
 }
